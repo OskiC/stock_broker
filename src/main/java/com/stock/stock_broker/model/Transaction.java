@@ -72,6 +72,86 @@ public class Transaction {
         return 0.0;
     }
 
+    public Long getId() {
+        return Id;
+    }
+
+    public void setId(Long id) {
+        Id = id;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public Stock getStock() {
+        return stock;
+    }
+
+    public void setStock(Stock stock) {
+        this.stock = stock;
+    }
+
+    public Double getOpenPrice() {
+        return openPrice;
+    }
+
+    public void setOpenPrice(Double openPrice) {
+        this.openPrice = openPrice;
+    }
+
+    public Double getClosePrice() {
+        return closePrice;
+    }
+
+    public void setClosePrice(Double closePrice) {
+        this.closePrice = closePrice;
+    }
+
+    public Integer getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(Integer quantity) {
+        this.quantity = quantity;
+    }
+
+    public TransactionStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(TransactionStatus status) {
+        this.status = status;
+    }
+
+    public LocalDateTime getOpenDate() {
+        return openDate;
+    }
+
+    public void setOpenDate(LocalDateTime openDate) {
+        this.openDate = openDate;
+    }
+
+    public LocalDateTime getCloseDate() {
+        return closeDate;
+    }
+
+    public void setCloseDate(LocalDateTime closeDate) {
+        this.closeDate = closeDate;
+    }
+
+    public Double getProfitAndLoss() {
+        return profitAndLoss;
+    }
+
+    public void setProfitAndLoss(Double profitAndLoss) {
+        this.profitAndLoss = profitAndLoss;
+    }
+
     public enum TransactionStatus{
         OPEN,
         CLOSED
