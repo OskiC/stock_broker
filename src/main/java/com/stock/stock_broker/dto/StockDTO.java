@@ -2,24 +2,15 @@ package com.stock.stock_broker.dto;
 
 public class StockDTO {
     private String stockName;
-    private String stockCodeName;
-    private Double stockPrice;
+    private String codeName;
+    private Double price;
 
     public StockDTO(){}
 
     public StockDTO(String stockName, String stockCodeName, Double stockPrice){
         this.stockName = stockName;
-        this.stockCodeName = stockCodeName;
-        this.stockPrice = stockPrice;
-    }
-
-
-    public String getStockCodeName() {
-        return stockCodeName;
-    }
-
-    public void setStockCodeName(String stockCodeName) {
-        this.stockCodeName = stockCodeName;
+        this.codeName = stockCodeName;
+        this.price = stockPrice;
     }
 
     public String getStockName() {
@@ -30,11 +21,19 @@ public class StockDTO {
         this.stockName = stockName;
     }
 
-    public Double getStockPrice(){
-        return stockPrice;
+    public String getCodeName() {
+        return codeName;
     }
 
-    public void setStockPrice(Double stockPrice){
-        this.stockPrice = stockPrice;
+    public void setCodeName(String codeName) {
+        this.codeName = codeName;
+    }
+
+    public Double getPrice() {
+        return price;
+    }
+
+    public void setPrice(Double price) {
+        this.price = price;
     }
 }
