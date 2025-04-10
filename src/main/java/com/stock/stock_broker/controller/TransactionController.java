@@ -1,6 +1,8 @@
 package com.stock.stock_broker.controller;
 
-import com.stock.stock_broker.dto.TransactionDTO;
+import com.stock.stock_broker.dto.transaction.BuyRequestDTO;
+import com.stock.stock_broker.dto.transaction.HistoryResponseDTO;
+import com.stock.stock_broker.dto.transaction.SellRequestDTO;
 import com.stock.stock_broker.model.Transaction;
 import com.stock.stock_broker.service.StockService;
 import com.stock.stock_broker.model.Stock;
@@ -8,6 +10,8 @@ import com.stock.stock_broker.service.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/transactions")
@@ -18,27 +22,34 @@ public class TransactionController {
     private StockService stockService;
 
     @PostMapping("/buy")
-    public ResponseEntity<Transaction> openTransaction(@RequestBody TransactionDTO transactionDTO){
-        Stock stock = stockService.getStockById(transactionDTO.getStockId());
+    public ResponseEntity<Transaction> openTransaction(@RequestBody BuyRequestDTO buyRequestDTO){
+        Stock stock = stockService.getStockById(buyRequestDTO.getStockId());
         Double openPrice = stock.getPrice();
 
         Transaction transaction = transactionService.openTransaction(
-                transactionDTO.getUserId(),
-                transactionDTO.getStockId(),
+                buyRequestDTO.getUserId(),
+                buyRequestDTO.getStockId(),
                 openPrice,
-                transactionDTO.getQuantity()
+                buyRequestDTO.getQuantity()
         );
         return ResponseEntity.ok(transaction);
     }
 
-    @PostMapping("/sell/{transactionId}")
-    public ResponseEntity<String> closeTransaction(@PathVariable Long transactionId){
-        Transaction transaction = transactionService.getTransactionById(transactionId);
+    @PostMapping("/sell")
+    public ResponseEntity<String> closeTransaction(@RequestBody SellRequestDTO sellRequestDTO){
+        Transaction transaction = transactionService.getTransactionById(sellRequestDTO.getTransactionId());
 
         Stock stock = stockService.getStockById(transaction.getId());
         Double closePrice = stock.getPrice();
 
-        transactionService.closeTransaction(transactionId, closePrice);
+        transactionService.closeTransaction(transaction.getId(), closePrice);
         return ResponseEntity.ok("Transaction closed");
+    }
+
+    @GetMapping("/history/{userId}")
+    public ResponseEntity<List<HistoryResponseDTO>> getUserTransactions(@PathVariable Long userId){
+        List<HistoryResponseDTO> userTransactions = transactionService.getTransactionsByUser(userId);
+
+        return ResponseEntity.ok(userTransactions);
     }
 }
