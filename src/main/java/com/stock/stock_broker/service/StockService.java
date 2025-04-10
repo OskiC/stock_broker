@@ -11,7 +11,7 @@ public class StockService {
     private StockRepository stockRepository;
 
     public Stock createStock(String stockName, String stockCode, Double price){
-        if(stockRepository.stockExists(stockName, stockCode)){
+        if(stockRepository.existsByStockNameAndCodeName(stockName, stockCode)){
             throw new IllegalArgumentException("Stock already exists");
         }
 
@@ -24,12 +24,17 @@ public class StockService {
     }
 
     public Stock getStockByName(String stockName){
-        return stockRepository.findByName(stockName)
+        return stockRepository.findByStockName(stockName)
                 .orElseThrow(() -> new IllegalArgumentException("Stock with that name not found!"));
     }
 
     public Stock getStockByCodeName(String codeName){
         return stockRepository.findByCodeName(codeName)
                 .orElseThrow(() -> new IllegalArgumentException("Stock with that codeName not found!"));
+    }
+
+    public Stock getStockById(Long id){
+        return stockRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Stock with that ID not found!"));
     }
 }

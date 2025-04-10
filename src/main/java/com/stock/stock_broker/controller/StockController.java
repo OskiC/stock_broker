@@ -16,8 +16,8 @@ public class StockController {
 
     @PostMapping("/add")
     public ResponseEntity<Stock> createStock(@RequestBody StockDTO stockDTO){
-        Stock newStock = stockService.createStock(stockDTO.getStockName(), stockDTO.getStockCodeName()
-                , stockDTO.getStockPrice());
+        Stock newStock = stockService.createStock(stockDTO.getStockName(), stockDTO.getCodeName()
+                , stockDTO.getPrice());
         return ResponseEntity.ok(newStock);
     }
 
