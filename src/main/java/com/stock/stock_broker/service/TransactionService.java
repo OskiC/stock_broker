@@ -41,6 +41,11 @@ public class TransactionService {
         transactionRepository.save(transaction);
     }
 
+    public Transaction getTransactionById(Long id){
+        return transactionRepository.findById(id).
+                orElseThrow(() -> new IllegalArgumentException("Transaction with that ID not found!"));
+    }
+
     public List<Transaction> getClosedTransactions(Long userId){
         return transactionRepository.findByStatus(Transaction.TransactionStatus.CLOSED);
     }
