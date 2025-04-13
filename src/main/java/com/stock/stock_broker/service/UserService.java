@@ -42,6 +42,34 @@ public class UserService {
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
     }
 
+    public User deposit(Long userId, Double value){
+        if(value == null || value <= 0){
+            throw new IllegalArgumentException("Value must be greater than zero");
+        }
+
+        User user = getUserById(userId);
+        user.setBalance(user.getBalance() + value);
+
+        return userRepository.save(user);
+    }
+
+    public User withdraw(Long userId, Double value){
+        if(value == null || value <= 0){
+            throw new IllegalArgumentException("Value must be greater than 0");
+        }
+
+        User user = getUserById(userId);
+
+        if(user.getBalance() < value){
+            throw new IllegalArgumentException("Insufficient balance for withdrawal");
+        }
+        if(user.getBalance() >= value) {
+            user.setBalance(user.getBalance() - value);
+        }
+
+        return userRepository.save(user);
+    }
+
     public List<PortfolioDTO> getUserPortfolio(Long id){
         User user = getUserById(id);
 
