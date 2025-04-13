@@ -36,14 +36,13 @@ public class TransactionController {
     }
 
     @PostMapping("/sell")
-    public ResponseEntity<String> closeTransaction(@RequestBody SellRequestDTO sellRequestDTO){
-        Transaction transaction = transactionService.getTransactionById(sellRequestDTO.getTransactionId());
-
-        Stock stock = stockService.getStockById(transaction.getId());
-        Double closePrice = stock.getPrice();
-
-        transactionService.closeTransaction(transaction.getId(), closePrice);
-        return ResponseEntity.ok("Transaction closed");
+    public ResponseEntity<String> sellStock(@RequestBody SellRequestDTO sellRequestDTO){
+        transactionService.sellStock(
+                sellRequestDTO.getUserId(),
+                sellRequestDTO.getStockId(),
+                sellRequestDTO.getQuantity()
+        );
+        return ResponseEntity.ok("Stock sold successfully");
     }
 
     @GetMapping("/history/{userId}")

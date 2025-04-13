@@ -22,25 +22,68 @@ public class TransactionService {
     private UserRepository userRepository;
     @Autowired
     private StockRepository stockRepository;
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private StockService stockService;
 
     public Transaction openTransaction(Long userId, Long stockId, Double openPrice, Integer quantity){
         User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("User not found"));
         Stock stock = stockRepository.findById(stockId).orElseThrow(() -> new IllegalArgumentException("Stock not found"));
 
+        if(user.getBalance() < openPrice * quantity){
+            throw new IllegalArgumentException("Not enough balance!");
+        }
+
         Transaction transaction = new Transaction(user, stock, openPrice, quantity);
         return transactionRepository.save(transaction);
     }
 
-    public void closeTransaction(Long transactionId, Double closePrice){
-        Transaction transaction = transactionRepository.findById(transactionId).orElseThrow(()
-            -> new IllegalArgumentException("Transaction not found"));
+    public void sellStock(Long userId, Long stockId, Integer quantityToSell){
+        User user = userService.getUserById(userId);
+        Stock stock = stockService.getStockById(stockId);
+        Double currentPrice = stock.getPrice();
 
-        transaction.closeTransaction(closePrice);
-        User user = transaction.getUser();
-        user.setBalance(user.getBalance() + transaction.getProfitAndLoss());
+        List<Transaction> openTransactions = transactionRepository.findByUserAndStockAndClosePriceIsNull(user, stock);
+
+        int remainingQuantity = quantityToSell;
+        double totalProfitOrLoss = 0.0;
+
+        for(Transaction t : openTransactions){
+            int availableQty = t.getQuantity();
+
+            if(remainingQuantity <= 0) break;
+
+            if(availableQty <= remainingQuantity){
+                t.setClosePrice(currentPrice);
+                double pnl = (currentPrice - t.getOpenPrice()) * availableQty;
+                t.setProfitAndLoss(pnl);
+                totalProfitOrLoss += pnl;
+                remainingQuantity -= availableQty;
+            }
+            else{
+                Transaction partialSell = new Transaction();
+                partialSell.setUser(user);
+                partialSell.setStock(stock);
+                partialSell.setOpenPrice(t.getOpenPrice());
+                partialSell.setClosePrice(currentPrice);
+                partialSell.setQuantity(remainingQuantity);
+                double pnl = (currentPrice - t.getOpenPrice()) * remainingQuantity;
+                partialSell.setProfitAndLoss(pnl);
+                transactionRepository.save(partialSell);
+
+                t.setQuantity(availableQty - remainingQuantity);
+                totalProfitOrLoss += pnl;
+                remainingQuantity = 0;
+            }
+        }
+
+        if(remainingQuantity > 0){
+            throw new IllegalArgumentException("Not enough stock to sell");
+        }
+
+        user.setBalance(user.getBalance() + (quantityToSell* currentPrice));
         userRepository.save(user);
-
-        transactionRepository.save(transaction);
     }
 
     public Transaction getTransactionById(Long id){
