@@ -1,4 +1,4 @@
-package com.stock.stock_broker.dto;
+package com.stock.stock_broker.dto.user;
 
 public class UserRegistrationDTO {
     private String username;
