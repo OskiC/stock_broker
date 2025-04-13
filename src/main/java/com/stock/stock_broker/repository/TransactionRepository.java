@@ -1,6 +1,8 @@
 package com.stock.stock_broker.repository;
 
+import com.stock.stock_broker.model.Stock;
 import com.stock.stock_broker.model.Transaction;
+import com.stock.stock_broker.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -14,4 +16,6 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
     List<Transaction> findByStatus(Transaction.TransactionStatus status);
 
     List<Transaction> findByUserId(Long userId);
+
+    List<Transaction> findByUserAndStockAndClosePriceIsNull(User user, Stock stock);
 }
