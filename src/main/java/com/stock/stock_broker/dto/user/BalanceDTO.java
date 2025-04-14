@@ -4,8 +4,8 @@ public class BalanceDTO {
     private Long userId;
     private Double amount;
 
-    BalanceDTO(){}
-    BalanceDTO(Long userId, Double depositOrWithdrawVal){
+    public BalanceDTO(){}
+    public BalanceDTO(Long userId, Double depositOrWithdrawVal){
         this.userId = userId;
         this.amount = depositOrWithdrawVal;
     }
