@@ -14,6 +14,14 @@ import java.util.Map;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<Object> handleUserNotFound(
+            UserNotFoundException ex,
+            WebRequest request
+    ) {
+        return buildErrorResponse(ex.getMessage(), HttpStatus.NOT_FOUND, request);
+    }
+
     // Handle IllegalArgumentException
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<Object> handleIllegalArgument(
@@ -22,6 +30,8 @@ public class GlobalExceptionHandler {
     ){
         return buildErrorResponse(ex.getMessage(), HttpStatus.BAD_REQUEST, request);
     }
+
+
 
     // To catch other Exceptions,
     // [TODO] in the future handle them properly

@@ -1,6 +1,7 @@
 package com.stock.stock_broker.service;
 
 import com.stock.stock_broker.dto.user.PortfolioDTO;
+import com.stock.stock_broker.exception.UserNotFoundException;
 import com.stock.stock_broker.model.Stock;
 import com.stock.stock_broker.model.Transaction;
 import com.stock.stock_broker.model.User;
@@ -39,7 +40,7 @@ public class UserService {
 
     public User getUserById(Long id){
         return userRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+                .orElseThrow(() -> new UserNotFoundException(id));
     }
 
     public User deposit(Long userId, Double value){
